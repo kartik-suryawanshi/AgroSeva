@@ -1,0 +1,22 @@
+
+> agri-hackathon@0.1.0 build
+> next build
+
+▲ Next.js 16.2.1 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.4s
+  Running TypeScript ...
+Failed to type check.
+
+./app/admin/applications/page.tsx:191:27
+Type error: Cannot find name 'FileScan'.
+
+  [90m189 |[0m                     <div className=[32m"border border-gray-200 rounded-lg p-4 flex gap-4 bg-w...[0m
+  [90m190 |[0m                       <div className=[32m"w-20 h-24 bg-gray-100 rounded border border-gray-20...[0m
+[31m[1m>[0m [90m191 |[0m                          <[33mFileScan[0m size={[35m24[0m} className=[32m"text-gray-400"[0m />
+  [90m    |[0m                           [31m[1m^[0m
+  [90m192 |[0m                       </div>
+  [90m193 |[0m                       <div>
+  [90m194 |[0m                         <h4 className=[32m"font-bold text-sm text-gray-900 mb-2"[0m>[33mAadhaar[0m [33mCard[0m...
+Next.js build worker exited with code: 1 and signal: null

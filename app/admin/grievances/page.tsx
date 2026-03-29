@@ -1,36 +1,76 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Filter, Phone, Clock, AlertTriangle, Send, X, ShieldAlert, CheckCircle2, ChevronDown, User } from "lucide-react";
+import { Search, Phone, Clock, AlertTriangle, Send, X, ShieldAlert, CheckCircle2, User, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const MOCK_TICKETS = [
-  { id: "GR-89021", name: "Ramesh Singh", category: "Subsidy Delay", priority: "High", date: "2 hrs ago", sla: "Overdue", status: "Open" },
-  { id: "GR-89018", name: "Vinod Kumar", category: "Land Record Error", priority: "Medium", date: "5 hrs ago", sla: "On Track", status: "In Progress" },
-  { id: "GR-88992", name: "Suresh Thakor", category: "Officer Misconduct", priority: "High", date: "1 day ago", sla: "Escalated", status: "Open" },
-  { id: "GR-88910", name: "Dineshbhai Patel", category: "Insurance Issue", priority: "Low", date: "2 days ago", sla: "Done", status: "Resolved" },
-];
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "../../../lib/api";
 
 export default function GrievanceManagementPage() {
-  const [selectedTicket, setSelectedTicket] = useState<typeof MOCK_TICKETS[0] | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [replyText, setReplyText] = useState("");
+  const [isInternal, setIsInternal] = useState(false);
+  const [newStatus, setNewStatus] = useState("in_progress");
+
+  const queryClient = useQueryClient();
+
+  // Fetch Grievances
+  const { data: grievancesData, isLoading } = useQuery({
+    queryKey: ['adminGrievances', search],
+    queryFn: async () => {
+      const res = await api.get('/admin/grievances', { params: { search, limit: 100 } });
+      return res.data;
+    }
+  });
+
+  const tickets = grievancesData?.docs || [];
+  const selectedTicket = tickets.find((t: any) => t._id === selectedTicketId);
+
+  // Mutations
+  const replyMutation = useMutation({
+    mutationFn: async () => {
+      const res = await api.put(`/admin/grievances/${selectedTicketId}/reply`, {
+        message: replyText,
+        isInternal,
+        status: newStatus
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminGrievances'] });
+      setReplyText("");
+      setIsInternal(false);
+    },
+    onError: (err: any) => alert(err.response?.data?.message || 'Failed to send reply')
+  });
 
   if (typeof window !== "undefined") {
     window.onkeydown = (e) => {
-      if (e.key === "Escape") setSelectedTicket(null);
+      if (e.key === "Escape") setSelectedTicketId(null);
     };
   }
 
   const getPriorityColor = (p: string) => {
-    if (p === "High") return "bg-red-100 text-red-800";
-    if (p === "Medium") return "bg-amber-100 text-amber-800";
+    if (p === "high") return "bg-red-100 text-red-800";
+    if (p === "medium") return "bg-amber-100 text-amber-800";
     return "bg-blue-100 text-blue-800";
   };
 
-  const getSlaColor = (sla: string) => {
-    if (sla === "Overdue" || sla === "Escalated") return "text-red-600 font-bold flex items-center gap-1";
-    if (sla === "Done") return "text-green-600 font-bold flex items-center gap-1";
-    return "text-amber-600 font-bold flex items-center gap-1";
+  const getStatusLabel = (s: string) => s.replace('_', ' ').toUpperCase();
+
+  const getStatusBadgeColor = (s: string) => {
+    if (s === "resolved") return "text-green-600 font-bold flex items-center gap-1";
+    if (s === "escalated" || s === "overdue") return "text-red-600 font-bold flex items-center gap-1";
+    if (s === "in_progress") return "text-blue-600 font-bold flex items-center gap-1";
+    return "text-amber-600 font-bold flex items-center gap-1"; // Open/default
   };
+
+  // KPI calculations
+  const openCount = tickets.filter((t:any) => t.status === 'open').length;
+  const inProgressCount = tickets.filter((t:any) => t.status === 'in_progress').length;
+  const escalatedCount = tickets.filter((t:any) => t.status === 'escalated').length;
+  const resolvedCount = tickets.filter((t:any) => t.status === 'resolved').length;
 
   return (
     <div className="space-y-6">
@@ -46,10 +86,10 @@ export default function GrievanceManagementPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: "Open Tickets", value: "42", color: "border-blue-500" },
-          { label: "Action Required", value: "18", color: "border-amber-500" },
-          { label: "Escalated to Nodal", value: "5", color: "border-red-500" },
-          { label: "Resolved Today", value: "24", color: "border-green-500" },
+          { label: "Open Tickets", value: openCount.toString(), color: "border-blue-500" },
+          { label: "Action Required", value: inProgressCount.toString(), color: "border-amber-500" },
+          { label: "Escalated to Nodal", value: escalatedCount.toString(), color: "border-red-500" },
+          { label: "Resolved", value: resolvedCount.toString(), color: "border-green-500" },
         ].map((kpi, i) => (
           <div key={i} className={`bg-white rounded-xl shadow-sm border border-gray-200 border-t-4 ${kpi.color} p-5`}>
             <p className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2">{kpi.label}</p>
@@ -62,64 +102,69 @@ export default function GrievanceManagementPage() {
       <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-wrap gap-3 w-full">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input type="text" placeholder="Search ID, Name..." className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest outline-none text-sm" />
+          <input 
+            type="text" 
+            placeholder="Search ID..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest outline-none text-sm" 
+          />
         </div>
         <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-forest outline-none bg-white">
-          <option>All Status</option><option>Open</option><option>In Progress</option>
+          <option>All Status</option><option>Open</option><option>In Progress</option><option>Resolved</option>
         </select>
         <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-forest outline-none bg-white">
           <option>All Priorities</option><option>High</option><option>Medium</option><option>Low</option>
-        </select>
-        <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-forest outline-none bg-white">
-          <option>All Categories</option>
         </select>
       </div>
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
-                <th className="px-6 py-4">Ticket ID</th>
-                <th className="px-6 py-4">Farmer Name</th>
-                <th className="px-6 py-4">Category</th>
-                <th className="px-6 py-4">Priority</th>
-                <th className="px-6 py-4">Submitted</th>
-                <th className="px-6 py-4">SLA Status</th>
-                <th className="px-6 py-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {MOCK_TICKETS.map((ticket) => (
-                <tr 
-                  key={ticket.id} 
-                  onClick={() => setSelectedTicket(ticket)}
-                  className="hover:bg-[#F0FDF4] cursor-pointer transition-colors"
-                >
-                  <td className="px-6 py-4 font-mono text-sm font-semibold text-gray-900">{ticket.id}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">{ticket.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{ticket.category}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider ${getPriorityColor(ticket.priority)}`}>
-                      {ticket.priority}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{ticket.date}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={getSlaColor(ticket.sla)}>
-                      {ticket.sla === "Overdue" ? <AlertTriangle size={14}/> : ticket.sla === "Done" ? <CheckCircle2 size={14}/> : <Clock size={14}/>}
-                      {ticket.sla}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-forest hover:text-forest-light font-semibold text-sm">Resolve</button>
-                  </td>
+        {isLoading ? (
+          <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-forest" /></div>
+        ) : tickets.length === 0 ? (
+          <div className="p-12 text-center text-gray-500 font-medium">No grievances found.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
+                  <th className="px-6 py-4">Ticket ID</th>
+                  <th className="px-6 py-4">Farmer Name</th>
+                  <th className="px-6 py-4">Category</th>
+                  <th className="px-6 py-4">Priority</th>
+                  <th className="px-6 py-4">Submitted</th>
+                  <th className="px-6 py-4">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {tickets.map((ticket: any) => (
+                  <tr 
+                    key={ticket._id} 
+                    onClick={() => { setSelectedTicketId(ticket._id); setNewStatus(ticket.status); }}
+                    className="hover:bg-[#F0FDF4] cursor-pointer transition-colors"
+                  >
+                    <td className="px-6 py-4 font-mono text-sm font-semibold text-gray-900">{ticket.ticketId}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900 line-clamp-1" title={ticket.farmerId?.personalDetails?.fullName}>{ticket.farmerId?.personalDetails?.fullName || "Unknown"}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 capitalize">{ticket.category}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider ${getPriorityColor(ticket.priority)}`}>
+                        {ticket.priority}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{new Date(ticket.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className={getStatusBadgeColor(ticket.status)}>
+                        {ticket.status === "resolved" ? <CheckCircle2 size={14}/> : ticket.status === "escalated" ? <AlertTriangle size={14}/> : <Clock size={14}/>}
+                        {getStatusLabel(ticket.status)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Slide-over Panel */}
@@ -130,7 +175,7 @@ export default function GrievanceManagementPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedTicket(null)}
+              onClick={() => setSelectedTicketId(null)}
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 cursor-pointer"
             />
             <motion.div
@@ -144,16 +189,18 @@ export default function GrievanceManagementPage() {
               <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50 flex-shrink-0">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className="text-xl font-bold text-gray-900">{selectedTicket.id}</h2>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${getPriorityColor(selectedTicket.priority)}`}>{selectedTicket.priority}</span>
+                    <h2 className="text-xl font-bold text-gray-900">{selectedTicket.ticketId}</h2>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${getPriorityColor(selectedTicket.priority)}`}>
+                      {selectedTicket.priority}
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-600 border border-gray-200 bg-white inline-block px-2 py-0.5 rounded font-medium">{selectedTicket.category}</p>
+                  <p className="text-sm text-gray-600 border border-gray-200 bg-white inline-block px-2 py-0.5 rounded font-medium capitalize">{selectedTicket.category}</p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <button onClick={() => setSelectedTicket(null)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
+                  <button onClick={() => setSelectedTicketId(null)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
                     <X size={20} />
                   </button>
-                  <span className={`text-xs ${getSlaColor(selectedTicket.sla)}`}>{selectedTicket.sla}</span>
+                  <span className={`text-xs uppercase tracking-wider ${getStatusBadgeColor(selectedTicket.status)}`}>{getStatusLabel(selectedTicket.status)}</span>
                 </div>
               </div>
 
@@ -167,48 +214,61 @@ export default function GrievanceManagementPage() {
                       <User size={20} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900">{selectedTicket.name}</h4>
-                      <p className="text-xs text-gray-500">Related App: <span className="font-mono text-forest">APP-2026-901</span></p>
+                      <h4 className="font-bold text-gray-900">{selectedTicket.farmerId?.personalDetails?.fullName || "Unknown"}</h4>
+                      <p className="text-xs text-gray-500 font-mono">{selectedTicket.farmerId?.mobileNumber || "N/A"}</p>
                     </div>
                   </div>
-                  <button className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-md text-sm font-bold border border-green-200 hover:bg-green-100 transition-colors">
-                    <Phone size={14} /> Call Farmer
+                  <button 
+                    onClick={() => alert(`Calling ${selectedTicket.farmerId?.mobileNumber}`)}
+                    className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-md text-sm font-bold border border-green-200 hover:bg-green-100 transition-colors"
+                  >
+                    <Phone size={14} /> Call
                   </button>
                 </div>
 
                 {/* Message Thread */}
                 <div className="flex-1 space-y-4">
-                  {/* Initial Complaint */}
+                  
+                  {/* Subject and initial complaint */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 relative">
                     <div className="absolute -left-3 top-4 w-6 h-6 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center ring-4 ring-gray-50">
                       <AlertTriangle size={12} />
                     </div>
                     <div className="ml-4">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="font-bold text-gray-900 text-sm">Original Complaint</span>
-                        <span className="text-xs text-gray-400">12 Mar, 10:30 AM</span>
+                        <span className="font-bold text-gray-900 text-sm">{selectedTicket.subject}</span>
+                        <span className="text-xs text-gray-400">{new Date(selectedTicket.createdAt).toLocaleString()}</span>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed bg-amber-50/50 p-3 rounded border border-amber-100/50">
-                        "I submitted my PM-KISAN application 3 months ago but haven't received the subsidy installment. The portal shows my land record is verified, but payment is stuck. Please check."
+                      <p className="text-sm text-gray-700 leading-relaxed bg-amber-50/50 p-3 rounded border border-amber-100/50 whitespace-pre-wrap">
+                        {selectedTicket.description}
                       </p>
                     </div>
                   </div>
 
-                  {/* Internal Note */}
-                  <div className="bg-blue-50/50 rounded-xl border border-blue-100 p-4 relative ml-8">
-                    <div className="absolute -left-3 top-4 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center ring-4 ring-gray-50">
-                      <ShieldAlert size={12} />
-                    </div>
-                    <div className="ml-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-bold text-blue-900 text-sm">Internal System Note</span>
-                        <span className="text-xs text-blue-400">12 Mar, 11:15 AM</span>
+                  {/* Replies (Thread) */}
+                  {selectedTicket.thread && selectedTicket.thread.map((msg: any, idx: number) => {
+                    const isInternal = msg.isInternal;
+                    const isFarmer = msg.senderModel === 'Farmer';
+
+                    return (
+                      <div key={idx} className={`${isInternal ? 'bg-blue-50/50 border border-blue-100 ml-8' : isFarmer ? 'bg-white border-gray-200' : 'bg-[#F0FDF4] border-green-200 ml-8'} rounded-xl border p-4 relative`}>
+                        <div className={`absolute -left-3 top-4 w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-gray-50 ${isInternal ? 'bg-blue-100 text-blue-600' : isFarmer ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-600'}`}>
+                           {isInternal ? <ShieldAlert size={12} /> : isFarmer ? <User size={12} /> : <Send size={12} />}
+                        </div>
+                        <div className="ml-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className={`font-bold text-sm ${isInternal ? 'text-blue-900' : isFarmer ? 'text-gray-900' : 'text-green-900'}`}>
+                              {isInternal ? 'Internal Note' : isFarmer ? 'Farmer Reply' : 'Official Response'}
+                            </span>
+                            <span className="text-xs text-gray-400">{new Date(msg.timestamp).toLocaleString()}</span>
+                          </div>
+                          <p className={`text-sm leading-relaxed whitespace-pre-wrap ${isInternal ? 'text-blue-800' : isFarmer ? 'text-gray-700' : 'text-green-800'}`}>
+                            {msg.message}
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-sm text-blue-800 leading-relaxed">
-                        Payment failure recorded in PFMS. Reason code: Account Dormant. Needs account re-activation or new bank details from farmer.
-                      </p>
-                    </div>
-                  </div>
+                    )
+                  })}
                 </div>
 
               </div>
@@ -216,26 +276,42 @@ export default function GrievanceManagementPage() {
               {/* Reply Box */}
               <div className="bg-white border-t border-gray-200 p-4 shrink-0 flex flex-col gap-3">
                 <div className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-t border border-gray-200 border-b-0">
-                  <span className="text-xs font-bold text-gray-500 uppercase">Reply to Farmer</span>
+                  <span className="text-xs font-bold text-gray-500 uppercase">Reply to Ticket</span>
                   <label className="flex items-center gap-2 text-xs font-medium text-gray-600 cursor-pointer">
-                    <input type="checkbox" className="w-3.5 h-3.5 text-forest focus:ring-forest rounded border-gray-300" />
+                    <input 
+                      type="checkbox" 
+                      className="w-3.5 h-3.5 text-forest focus:ring-forest rounded border-gray-300" 
+                      checked={isInternal}
+                      onChange={(e) => setIsInternal(e.target.checked)}
+                    />
                     Save as Internal Note
                   </label>
                 </div>
                 <textarea 
                   rows={3} 
-                  placeholder="Type your response here..." 
+                  placeholder={isInternal ? "Type an internal note (farmer cannot see this)..." : "Type your response to the farmer here..."} 
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
                   className="w-full text-sm p-3 border border-gray-300 rounded-b focus:ring-1 focus:ring-forest focus:border-forest outline-none resize-none -mt-3 relative z-10"
                 ></textarea>
                 
                 <div className="flex gap-3 mt-1">
-                  <select className="flex-1 border border-gray-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-forest outline-none bg-white font-medium">
-                    <option>Status: In Progress</option>
-                    <option>Status: Resolved</option>
-                    <option>Status: Escalated</option>
+                  <select 
+                    className="flex-1 border border-gray-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-forest outline-none bg-white font-medium"
+                    value={newStatus}
+                    onChange={(e) => setNewStatus(e.target.value)}
+                  >
+                    <option value="open">Status: Open</option>
+                    <option value="in_progress">Status: In Progress</option>
+                    <option value="resolved">Status: Resolved</option>
+                    <option value="escalated">Status: Escalated</option>
                   </select>
-                  <button className="flex-1 bg-forest hover:bg-forest-light text-white py-2.5 rounded-lg font-bold shadow-subtle transition-colors flex items-center justify-center gap-2">
-                     Send Reply <Send size={16} />
+                  <button 
+                    onClick={() => replyMutation.mutate()}
+                    disabled={!replyText.trim() || replyMutation.isPending}
+                    className="flex-1 bg-forest hover:bg-forest-light text-white py-2.5 rounded-lg font-bold shadow-subtle transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                     {replyMutation.isPending ? "Sending..." : "Send"} <Send size={16} />
                   </button>
                 </div>
               </div>

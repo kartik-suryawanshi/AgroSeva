@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, ChevronRight, X, Calendar, IndianRupee, FileText, CheckCircle2, ChevronLeft, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import api from "../../lib/api";
 
 export default function SchemesPage() {
@@ -41,6 +43,17 @@ export default function SchemesPage() {
       return res.data;
     }
   });
+
+  const router = useRouter();
+
+  const handleApplyClick = (schemeId: string) => {
+    const token = Cookies.get('accessToken');
+    if (token) {
+      router.push(`/dashboard/apply?schemeId=${schemeId}`);
+    } else {
+      router.push(`/login?redirect=/dashboard/apply?schemeId=${schemeId}`);
+    }
+  };
 
   const schemes = schemesResponse?.docs || [];
   const totalPages = schemesResponse?.totalPages || 1;
@@ -177,9 +190,12 @@ export default function SchemesPage() {
                     View Details
                   </button>
                   <div className="flex-1 group relative">
-                    <Link href={`/login?redirect=/dashboard/apply?schemeId=${scheme._id}`} className="w-full flex items-center justify-center bg-forest text-white hover:bg-forest-light font-semibold py-2 rounded-md transition-colors">
+                    <button 
+                      onClick={() => handleApplyClick(scheme._id)} 
+                      className="w-full flex items-center justify-center bg-forest text-white hover:bg-forest-light font-semibold py-2 rounded-md transition-colors"
+                    >
                       Apply Now
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -351,12 +367,12 @@ export default function SchemesPage() {
                     {selectedScheme.timeline?.applicationEndDate ? new Date(selectedScheme.timeline.applicationEndDate).toLocaleDateString() : 'Rolling Application'}
                   </span>
                 </div>
-                <Link 
-                  href={`/login?redirect=/dashboard/apply?schemeId=${selectedScheme._id}`}
+                <button 
+                  onClick={() => handleApplyClick(selectedScheme._id)}
                   className="w-full flex items-center justify-center bg-forest hover:bg-forest-light text-white py-3.5 rounded-lg font-bold transition-colors mb-2"
                 >
                   Apply to this Scheme
-                </Link>
+                </button>
                 <p className="text-xs text-center text-gray-500">You must be registered to submit an application.</p>
               </div>
 

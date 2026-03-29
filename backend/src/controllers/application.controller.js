@@ -4,6 +4,16 @@ const Scheme = require('../models/Scheme');
 const Farmer = require('../models/Farmer');
 const { evaluateEligibility } = require('../services/eligibilityEngine');
 const { Queue } = require('bullmq');
+const redisClient = require('../config/redis');
+
+// Helper to invalidate admin dashboard cache so officials see real-time updates
+const invalidateDashboardCache = async () => {
+  if (!redisClient.isReady) return;
+  try {
+    const keys = await redisClient.keys('admin:dashboard:*');
+    if (keys.length > 0) await redisClient.del(keys);
+  } catch (_) { /* Redis unavailable */ }
+};
 
 const notifQueue = new Queue('send-notification', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
 
@@ -70,6 +80,27 @@ exports.submitApplication = async (req, res) => {
     initialStatus = 'ineligible';
   }
 
+  // --- SMART AUTOMATED OFFICER ROUTING ---
+  const User = require('../models/User');
+  const officials = await User.find({ role: 'official', isActive: true }, '_id');
+  let bestOfficialId = null;
+
+  if (officials.length > 0) {
+    const workloads = await Application.aggregate([
+      { $match: { assignedOfficer: { $in: officials.map(o => o._id) }, status: { $in: ['submitted', 'under_review', 'documents_pending'] } } },
+      { $group: { _id: '$assignedOfficer', count: { $sum: 1 } } },
+      { $sort: { count: 1 } }
+    ]);
+    
+    if (workloads.length < officials.length) {
+      const busyOfficialIds = workloads.map(w => w._id.toString());
+      bestOfficialId = officials.find(o => !busyOfficialIds.includes(o._id.toString()))._id;
+    } else if (workloads.length > 0) {
+      bestOfficialId = workloads[0]._id;
+    }
+  }
+  // -----------------------------------------
+
   const appId = `APP-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
 
   const application = await Application.create({
@@ -95,9 +126,19 @@ exports.submitApplication = async (req, res) => {
         remarks: 'Auto-submitted via portal',
       }
     ],
+    assignedOfficer: bestOfficialId,
   });
 
   await Scheme.findByIdAndUpdate(schemeId, { $inc: { applicationCount: 1 } });
+
+  // IMPORTANT: Link the newly appended application ID to the documents so they appear in the Document Verification Center
+  if (documents && documents.length > 0) {
+    const DocumentModel = require('../models/Document');
+    await DocumentModel.updateMany(
+      { _id: { $in: documents } },
+      { $set: { applicationId: application._id } }
+    );
+  }
 
   // Use res.locals to pass resources to auditLog middleware
   res.locals.resourceId = application._id;
@@ -113,6 +154,9 @@ exports.submitApplication = async (req, res) => {
     data: { applicationId: application._id },
     channels: ['in_app', 'sms']
   });
+
+  // Ensure officials dashboard immediately reflects this new application
+  await invalidateDashboardCache();
 
   res.status(201).json({ success: true, message: 'Application submitted', data: application });
 };

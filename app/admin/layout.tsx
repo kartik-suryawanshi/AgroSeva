@@ -58,6 +58,10 @@ export default function AdminLayout({
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex">
       {/* Sidebar (left, 260px wide) */}

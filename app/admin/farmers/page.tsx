@@ -190,32 +190,32 @@ export default function FarmerRecordsPage() {
                   <td colSpan={7} className="px-6 py-10 text-center text-gray-500">No farmers found.</td>
                 </tr>
               ) : (
-              {farmers.map((farmer: any) => {
-                const kycStatus = farmer?.personalDetails?.aadhaarVerified ? "Verified" : "Pending";
-                const land = farmer?.landDetails?.totalLandAcres !== undefined ? `${farmer.landDetails.totalLandAcres} Acres` : "—";
-                return (
-                <tr 
-                  key={farmer._id} 
-                  onClick={() => setSelectedFarmerId(farmer._id)}
-                  className="hover:bg-[#F0FDF4] cursor-pointer transition-colors"
-                >
-                  <td className="px-6 py-4 font-mono text-sm font-semibold text-gray-900">{farmer?.farmerId || "—"}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">{farmer?.personalDetails?.fullName || "Unknown"}</td>
-                  <td className="px-6 py-4 font-mono text-sm text-gray-500">{maskValue(farmer?.personalDetails?.aadhaarNumber)}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{farmer?.address?.district || "—"}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900 font-medium">{land}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${getKycBadge(kycStatus)}`}>
-                      {getKycIcon(kycStatus)}
-                      {kycStatus}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-forest hover:text-forest-light font-semibold text-sm">View 360°</button>
-                  </td>
-                </tr>
-                );
-              })}
+                farmers.map((farmer: any) => {
+                  const kycStatus = farmer?.personalDetails?.aadhaarVerified ? "Verified" : "Pending";
+                  const land = farmer?.landDetails?.totalLandAcres !== undefined ? `${farmer.landDetails.totalLandAcres} Acres` : "—";
+                  return (
+                  <tr 
+                    key={farmer._id} 
+                    onClick={() => setSelectedFarmerId(farmer._id)}
+                    className="hover:bg-[#F0FDF4] cursor-pointer transition-colors"
+                  >
+                    <td className="px-6 py-4 font-mono text-sm font-semibold text-gray-900">{farmer?.farmerId || "—"}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900">{farmer?.personalDetails?.fullName || "Unknown"}</td>
+                    <td className="px-6 py-4 font-mono text-sm text-gray-500">{maskValue(farmer?.personalDetails?.aadhaarNumber)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{farmer?.address?.district || "—"}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">{land}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${getKycBadge(kycStatus)}`}>
+                        {getKycIcon(kycStatus)}
+                        {kycStatus}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="text-forest hover:text-forest-light font-semibold text-sm">View 360°</button>
+                    </td>
+                  </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

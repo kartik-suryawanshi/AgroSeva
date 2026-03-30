@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import Cookies from "js-cookie";
 import { 
   LayoutDashboard, 
   FileCheck, 
@@ -22,9 +23,24 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileNumber, setMobileNumber] = useState<string>("");
+  const [authChecked, setAuthChecked] = useState(false);
+
+  // Skip auth guard for the login page
+  const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
+    if (isLoginPage) {
+      setAuthChecked(true);
+      return;
+    }
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      router.replace("/admin/login");
+      return;
+    }
+    setAuthChecked(true);
     try {
       const uStr = typeof window !== "undefined" ? localStorage.getItem("user") : null;
       if (!uStr) return;
@@ -33,7 +49,14 @@ export default function AdminLayout({
     } catch {
       // ignore
     }
-  }, []);
+  }, [pathname, isLoginPage, router]);
+
+  const handleLogout = () => {
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    if (typeof window !== "undefined") localStorage.removeItem("user");
+    router.push("/admin/login");
+  };
 
   const initials = useMemo(() => {
     if (!mobileNumber) return "A";
@@ -57,6 +80,12 @@ export default function AdminLayout({
     { name: "Schemes", href: "/admin/schemes", icon: Wallet },
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
+
+  // Login page renders without sidebar/shell
+  if (isLoginPage) return <>{children}</>;
+
+  // Show blank while checking auth (prevents flash before redirect)
+  if (!authChecked) return null;
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex">
@@ -110,9 +139,9 @@ export default function AdminLayout({
                 <div className="text-sm font-bold text-gray-900 leading-tight">AgroAdmin</div>
                 <div className="text-xs text-gray-500">{subTitle}</div>
               </div>
-              <Link href="/login" className="ml-4 text-gray-400 hover:text-red-500 transition-colors">
+              <button onClick={handleLogout} className="ml-4 text-gray-400 hover:text-red-500 transition-colors" title="Logout">
                 <LogOut size={20} />
-              </Link>
+              </button>
             </div>
           </div>
         </header>

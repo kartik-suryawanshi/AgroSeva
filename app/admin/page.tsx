@@ -15,11 +15,33 @@ export default function AdminDashboardPage() {
   });
 
   if (isLoading) {
-    return <div className="flex justify-center p-24"><Loader2 className="animate-spin text-forest" /></div>;
+    return (
+      <div className="space-y-6 max-w-[1600px] mx-auto animate-pulse">
+        <div className="h-8 bg-gray-200 rounded w-48" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-28 bg-gray-200 rounded-xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 h-80 bg-gray-200 rounded-xl" />
+          <div className="h-80 bg-gray-200 rounded-xl" />
+        </div>
+      </div>
+    );
   }
   
   if (error || !dashboard) {
-    return <div className="text-center p-12 text-red-500">Failed to load dashboard data.</div>;
+    return (
+      <div className="flex flex-col items-center justify-center p-24 text-center gap-4">
+        <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-2xl">⚠</div>
+        <h2 className="text-lg font-bold text-gray-800">Failed to load dashboard</h2>
+        <p className="text-sm text-gray-500 max-w-sm">Could not reach the server. Please check your connection or try again.</p>
+        <button onClick={() => window.location.reload()} className="mt-2 px-5 py-2 bg-forest text-white rounded-lg font-semibold text-sm hover:bg-forest-dark transition-colors">
+          Retry
+        </button>
+      </div>
+    );
   }
   return (
     <div className="space-y-8 max-w-[1600px] mx-auto">

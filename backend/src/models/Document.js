@@ -7,7 +7,7 @@ const documentSchema = new mongoose.Schema(
 
     docType: {
       type: String,
-      enum: ['aadhaar', 'land_record', 'bank_passbook', 'crop_photo', 'income_certificate', 'caste_certificate', 'other'],
+      enum: ['aadhaar', 'land_record', 'bank_passbook', 'crop_photo', 'income_certificate', 'caste_certificate', 'invoice', 'passport_photo', 'receipt', 'other'],
     },
 
     originalFileName: String,

@@ -135,8 +135,57 @@ exports.getDashboard = async (req, res) => {
 };
 
 exports.getAnalytics = async (req, res) => {
-  // We can write a full pipeline later, currently returning a stub to fit API requirements
-  res.status(200).json({ success: true, message: 'Analytics generated', data: {} });
+  try {
+    const ApplicationModel = require('../models/Application');
+    const SchemeModel = require('../models/Scheme');
+    const GrievanceModel = require('../models/Grievance');
+
+    // 1. Applications over time (last 6 months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const appsOverTime = await ApplicationModel.aggregate([
+      { $match: { createdAt: { $gte: sixMonthsAgo } } },
+      { $group: { 
+          _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          count: { $sum: 1 },
+          approved: { $sum: { $cond: [{ $in: ["$status", ["approved", "disbursed"]] }, 1, 0] } }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // 2. Applications by Scheme
+    const appsByScheme = await ApplicationModel.aggregate([
+      { $group: { _id: "$schemeId", count: { $sum: 1 } } },
+      { $lookup: { from: 'schemes', localField: '_id', foreignField: '_id', as: 'scheme' } },
+      { $unwind: "$scheme" },
+      { $project: { name: "$scheme.schemeName", count: 1 } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]);
+
+    // 3. Status Distribution
+    const statusDist = await ApplicationModel.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } }
+    ]);
+
+    // 4. Grievance status
+    const grievances = await GrievanceModel.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } }
+    ]);
+
+    const data = {
+      trend: appsOverTime,
+      byScheme: appsByScheme,
+      applicationsStatus: statusDist,
+      grievancesStatus: grievances
+    };
+
+    res.status(200).json({ success: true, message: 'Analytics generated', data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to generate analytics', error: err.message });
+  }
 };
 
 exports.getPredictions = async (req, res) => {

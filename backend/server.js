@@ -13,8 +13,11 @@ const startServer = async () => {
     const connectDB = require('./src/config/db');
     await connectDB();
     
-    // Initialize Background Workers
+    // Initialize Background Workers (BullMQ)
     require('./src/jobs/index')();
+
+    // Initialize Scheduled Cron Automations
+    require('./src/cron/index')();
 
     const server = http.createServer(app);
     server.listen(PORT, () => {

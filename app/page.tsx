@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Users, FileText, CheckCircle, Headphones, Zap, UploadCloud, MapPin } from "lucide-react";
+import { Users, FileText, CheckCircle, Headphones, Zap, UploadCloud, MapPin, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import CinematicScroll from "../components/CinematicScroll";
 import api from "../lib/api";
 
 export default function Home() {
@@ -19,155 +18,157 @@ export default function Home() {
     new Intl.NumberFormat("en-IN", { notation: "compact", maximumFractionDigits: 1 }).format(n);
 
   return (
-    <main className="relative w-full">
-      {/* Navbar overlaying the cinematic scroll */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-forest-dark/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center">
-              <span className="text-forest-dark font-bold text-lg">A</span>
+    <main className="min-h-screen bg-offwhite flex flex-col font-sans">
+      {/* Navbar Minimalist */}
+      <nav className="sticky top-0 z-50 bg-offwhite/90 backdrop-blur-xl border-b border-gray-200/50">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-forest flex items-center justify-center">
+              <span className="text-white font-bold text-sm">A</span>
             </div>
-            <span className="text-white font-bold text-xl tracking-wide">AgroSeva Portal</span>
+            <span className="text-gray-900 font-bold text-lg tracking-tight">AgroSeva</span>
           </div>
           
           <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-white/90 hover:text-gold transition-colors font-medium">Home</Link>
-            <Link href="/schemes" className="text-white/90 hover:text-gold transition-colors font-medium">Schemes</Link>
-            <Link href="/about" className="text-white/90 hover:text-gold transition-colors font-medium">About</Link>
-            <Link href="/contact" className="text-white/90 hover:text-gold transition-colors font-medium">Contact</Link>
+            <Link href="/" className="text-gray-600 hover:text-forest transition-colors text-sm font-medium">Home</Link>
+            <Link href="/schemes" className="text-gray-600 hover:text-forest transition-colors text-sm font-medium">Schemes</Link>
+            <Link href="/about" className="text-gray-600 hover:text-forest transition-colors text-sm font-medium">About</Link>
           </div>
 
-          <div>
-             <Link href="/login" className="bg-forest hover:bg-forest-light text-white px-6 py-2.5 rounded-md font-medium transition-colors shadow-subtle border border-forest-light/50">
-               Login
+          <div className="flex items-center gap-4">
+             <Link href="/login" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors hidden sm:block">
+               Sign in
+             </Link>
+             <Link href="/login" className="bg-forest hover:bg-forest-light text-white px-5 py-2 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center gap-2">
+               Get Started
              </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero / Cinematic Scroll Section */}
-      <section className="relative w-full">
-        {/* We place CTA buttons absolutely inside the first part of the scroll, or fixed on page load? 
-            Since the scroll takes 900vh, we'll let the user scroll through the story, and put CTAs at the bottom of the first milestone, handled inside the CinematicScroll, or we just put them sticky.
-            Let's put a simple overlay that fades out on scroll, or just standard buttons immediately below the scroll.
-        */}
-        <CinematicScroll />
+      {/* Hero Minimalist */}
+      <section className="relative w-full pt-32 pb-24 overflow-hidden border-b border-gray-200/50">
+        {/* Subtle patterned background or gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--color-gold)_0%,transparent_20%)] opacity-10"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,var(--color-forest)_0%,transparent_30%)] opacity-5"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest/5 border border-forest/10 text-forest-light text-xs font-semibold tracking-wide uppercase mb-8">
+            <span className="w-2 h-2 rounded-full bg-forest animate-pulse"></span>
+            Official Government Portal
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 tracking-tight leading-[1.1] max-w-4xl mb-6">
+            Empowering Farmers with <span className="text-forest">Smart</span> Solutions
+          </h1>
+          
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10 leading-relaxed">
+            A seamless, transparent platform to access government agricultural schemes, submit claims, and resolve grievances with zero friction.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <Link href="/login" className="bg-forest hover:transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-forest/20 text-white px-8 py-3.5 rounded-xl font-medium transition-all flex items-center justify-center gap-2 text-base">
+              Farmer Login <ArrowRight size={18} />
+            </Link>
+            <Link href="/schemes" className="bg-white border hover:bg-gray-50 border-gray-200 text-gray-700 px-8 py-3.5 rounded-xl font-medium transition-all flex items-center justify-center text-base shadow-sm">
+              Explore Schemes
+            </Link>
+          </div>
+        </div>
       </section>
 
-      {/* CTA Buttons for the landing page - fixed near bottom of the first viewport */}
-      <div className="absolute top-[80vh] left-[10vw] z-50 flex gap-4 pointer-events-auto">
-        <Link href="/login" className="bg-forest hover:bg-forest-light text-white px-8 py-3 rounded-md font-bold transition-all shadow-subtle text-lg">
-          Farmer Login
-        </Link>
-        <Link href="/schemes" className="border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-md font-bold transition-all text-lg">
-          View Schemes
-        </Link>
-      </div>
-
-      {/* Content Below Hero */}
-      <section className="relative z-10 bg-offwhite py-24">
+      {/* Metrics Section */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 -mt-40 relative z-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {[
-              {
-                label: "Total Farmers Registered",
-                value: isLoading ? "—" : formatCompact(overview?.totalFarmers || 0),
-                icon: Users,
-              },
-              {
-                label: "Schemes Active",
-                value: isLoading ? "—" : formatCompact(overview?.schemesActive || 0),
-                icon: FileText,
-              },
-              {
-                label: "Claims Processed",
-                value: isLoading ? "—" : formatCompact(overview?.claimsProcessed || 0),
-                icon: CheckCircle,
-              },
-              {
-                label: "Grievances Resolved",
-                value: isLoading ? "—" : `${overview?.grievancesResolvedRate || 0}%`,
-                icon: Headphones,
-              },
+              { label: "Farmers Registered", value: overview?.totalFarmers || 0, formatted: formatCompact(overview?.totalFarmers || 0) },
+              { label: "Active Schemes", value: overview?.schemesActive || 0, formatted: formatCompact(overview?.schemesActive || 0) },
+              { label: "Claims Processed", value: overview?.claimsProcessed || 0, formatted: formatCompact(overview?.claimsProcessed || 0) },
+              { label: "Resolution Rate", value: overview?.grievancesResolvedRate || 0, formatted: `${overview?.grievancesResolvedRate || 0}%` },
             ].map((stat, i) => (
-              <div key={i} className="card p-8 flex flex-col items-start gap-4 bg-white">
-                <div className="w-12 h-12 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                  <stat.icon size={24} />
-                </div>
-                <div>
-                  <h3 className="text-4xl font-bold text-gray-900">{stat.value}</h3>
-                  <p className="text-gray-500 font-medium mt-1">{stat.label}</p>
-                </div>
+              <div key={i} className="flex flex-col items-start border-l-2 border-forest/10 pl-6">
+                <span className="text-gray-500 font-medium text-sm md:text-base mb-2">{stat.label}</span>
+                <span className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                  {isLoading ? "—" : stat.formatted}
+                </span>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Features Section */}
-          <div className="mt-32">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-forest-dark mb-4">Designed for the modern farmer</h2>
-              <p className="text-lg text-gray-600">Access all government resources through a single, easy-to-use platform with full transparency.</p>
+      {/* Features Section */}
+      <section className="py-24 bg-offwhite border-t border-gray-200/50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
+                Designed for speed and simplicity.
+              </h2>
+              <p className="text-gray-600 text-lg">
+                We've rebuilt the agricultural support system from the ground up to ensure you get what you need, when you need it.
+              </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[
-                { title: "Fast Approvals", desc: "AI-driven document verification speeds up scheme and subsidy approvals to under 48 hours.", icon: Zap },
-                { title: "Document Upload", desc: "Easily upload Aadhaar, 7/12 land extracts, and bank passbooks directly from your mobile phone.", icon: UploadCloud },
-                { title: "Live Tracking", desc: "Know exactly where your application or claim is with real-time status updates and SMS alerts.", icon: MapPin },
-              ].map((feature, i) => (
-                <div key={i} className="flex flex-col items-center text-center p-6">
-                  <div className="w-16 h-16 rounded-2xl bg-gold/20 flex items-center justify-center text-gold-hover mb-6">
-                    <feature.icon size={32} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Instant Verification", desc: "AI-driven document checking approvals within 48 hours instead of months.", icon: Zap },
+              { title: "Mobile Uploads", desc: "Snap and upload Aadhaar, land extracts, and bank details directly from your phone.", icon: UploadCloud },
+              { title: "Real-time Tracking", desc: "Always know exactly where your application stands via our live tracking dashboard.", icon: MapPin },
+            ].map((feature, i) => (
+              <div key={i} className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 rounded-xl bg-forest/5 flex items-center justify-center text-forest mb-6">
+                  <feature.icon size={24} />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-forest-dark border-t border-forest-light py-12 text-white/80">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center">
-                <span className="text-forest-dark font-bold text-lg">A</span>
+      {/* Footer Minimal */}
+      <footer className="bg-white border-t border-gray-200 pt-16 pb-8 mt-auto">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-forest flex items-center justify-center">
+                <span className="text-white font-bold text-sm">A</span>
               </div>
-              <span className="text-white font-bold text-xl tracking-wide">AgroSeva Portal</span>
+              <span className="text-gray-900 font-bold text-lg tracking-tight">AgroSeva Portal</span>
             </div>
-            <p className="max-w-sm">
-              An official government initiative to empower farmers with seamless access to agricultural schemes, subsidies, and support.
+            <p className="text-gray-500 text-sm max-w-xs">
+              Empowering the agricultural backbone with modern, accessible government support.
             </p>
           </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li><Link href="/" className="hover:text-gold transition-colors">Home</Link></li>
-              <li><Link href="/schemes" className="hover:text-gold transition-colors">Schemes</Link></li>
-              <li><Link href="/login" className="hover:text-gold transition-colors">Login / Register</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Contact</h4>
-            <ul className="space-y-2">
-              <li className="flex items-center gap-2"><Headphones size={16} /> Helpline: 1800-120-1200</li>
-              <li>support@agroseva.gov.in</li>
-            </ul>
+          
+          <div className="flex gap-8 text-sm font-medium">
+            <div className="flex flex-col gap-3">
+              <span className="text-gray-900 font-semibold mb-1">Platform</span>
+              <Link href="/schemes" className="text-gray-500 hover:text-forest transition-colors">Schemes</Link>
+              <Link href="/login" className="text-gray-500 hover:text-forest transition-colors">Apply Now</Link>
+              <Link href="/dashboard" className="text-gray-500 hover:text-forest transition-colors">Track Status</Link>
+            </div>
+            <div className="flex flex-col gap-3">
+              <span className="text-gray-900 font-semibold mb-1">Support</span>
+              <a href="#" className="text-gray-500 hover:text-forest transition-colors">Help Center</a>
+              <a href="mailto:support@agroseva.gov.in" className="text-gray-500 hover:text-forest transition-colors">Contact</a>
+            </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-white/10 text-sm text-white/50 flex flex-col md:flex-row justify-between items-center">
-          <p>© 2026 Government Agriculture Department. All rights reserved.</p>
-          <div className="flex gap-4 mt-4 md:mt-0">
-            <Link href="#" className="hover:text-white">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white">Terms of Service</Link>
+        
+        <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 gap-4">
+          <p>© {new Date().getFullYear()} Government Agriculture Department. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="#" className="hover:text-gray-600 transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-gray-600 transition-colors">Terms</Link>
           </div>
         </div>
       </footer>
     </main>
   );
 }
+

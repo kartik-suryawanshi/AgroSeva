@@ -54,4 +54,16 @@ router.post('/schemes', logAction('CREATE_SCHEME', 'Scheme'), adminSchemeControl
 router.put('/schemes/:schemeId', logAction('UPDATE_SCHEME', 'Scheme'), adminSchemeController.updateScheme);
 router.put('/schemes/:schemeId/publish', logAction('PUBLISH_SCHEME', 'Scheme'), adminSchemeController.publishScheme);
 
+// Fraud Scanner — Manual Trigger
+router.post('/reports/trigger-fraud-scan', async (req, res) => {
+  try {
+    const { runFraudScanner } = require('../cron/fraudScanner');
+    // fire and forget — don't await on the full batch
+    runFraudScanner().catch(e => console.error('Manual fraud scan failed', e.message));
+    res.json({ success: true, message: 'Fraud scan queued and running in background.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

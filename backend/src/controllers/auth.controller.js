@@ -18,9 +18,12 @@ exports.register = async (req, res) => {
     password: z.string().min(6),
     fullName: z.string().min(2),
     role: z.enum(['farmer', 'official', 'admin']).default('farmer'),
+    aadhaarNumber: z.string().optional(),
+    state: z.string().optional(),
+    district: z.string().optional(),
   });
 
-  const { mobileNumber, password, fullName, role } = schema.parse(req.body);
+  const { mobileNumber, password, fullName, role, aadhaarNumber, state, district } = schema.parse(req.body);
 
   let user = await User.findOne({ mobileNumber });
   if (user && user.isVerified) {
@@ -46,7 +49,12 @@ exports.register = async (req, res) => {
     const existingFarmer = await Farmer.findOne({ userId: user._id });
     if (!existingFarmer) {
       const farmerId = `AGR-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
-      await Farmer.create({ userId: user._id, farmerId, personalDetails: { fullName, mobileNumber } });
+      await Farmer.create({ 
+        userId: user._id, 
+        farmerId, 
+        personalDetails: { fullName, mobileNumber, aadhaarNumber },
+        address: { state, district }
+      });
     }
   }
 

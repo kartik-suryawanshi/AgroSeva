@@ -4,38 +4,209 @@
   --color-forest: #1B4332;
   --color-forest-light: #2D6A4F;
   --color-forest-dark: #081C15;
-  --color-offwhite: #F8F4EF;
+  --color-offwhite: #F1F1F1;
+  --color-lime: #E6F4A2;
+  --color-lime-hover: #D9ED7E;
   --color-gold: #C9A84C;
   --color-gold-hover: #D4B86A;
   --shadow-subtle: 0 2px 12px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
   --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
 }
 
+/* ─── Base ─────────────────────────────────────────── */
 @layer base {
   body {
     background-color: var(--color-offwhite);
     color: #111827;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-mono), 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
 }
 
+/* ─── Cards ────────────────────────────────────────── */
 .card {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: var(--shadow-subtle);
   border: 1px solid #E5E7EB;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-hover);
 }
 
-/* Custom scrollbar for webkit */
+/* ─── Bracket Label ────────────────────────────────── */
+.bracket-label {
+  font-family: var(--font-mono), 'Courier New', monospace;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+}
+
+/* ─── Buttons ──────────────────────────────────────── */
+.btn-lime {
+  background-color: var(--color-lime);
+  color: #111827;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: var(--font-mono), 'Courier New', monospace;
+}
+
+.btn-lime:hover {
+  background-color: var(--color-lime-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(230, 244, 162, 0.4);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #111827;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  border: 1.5px solid #111827;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: var(--font-mono), 'Courier New', monospace;
+}
+
+.btn-outline:hover {
+  background-color: #111827;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-forest {
+  background-color: var(--color-forest);
+  color: #ffffff;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: var(--font-mono), 'Courier New', monospace;
+}
+
+.btn-forest:hover {
+  background-color: var(--color-forest-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(27, 67, 50, 0.3);
+}
+
+/* ─── Animations ───────────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slide-in-left 0.8s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slide-in-right 0.8s ease-out forwards;
+}
+
+.animate-count-up {
+  animation: count-up 0.6s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+
+/* ─── Stat Number ──────────────────────────────────── */
+.stat-number {
+  font-family: var(--font-mono), 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: #111827;
+}
+
+/* ─── Glass effect ─────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Custom scrollbar ─────────────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -51,4 +222,17 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #9CA3AF;
+}
+
+/* ─── Image hover zoom ─────────────────────────────── */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img {
+  transition: transform 0.6s ease;
+}
+
+.img-zoom:hover img {
+  transform: scale(1.05);
 }

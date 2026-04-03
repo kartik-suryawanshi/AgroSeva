@@ -17,6 +17,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [aadhaarNumber, setAadhaarNumber] = useState("");
+  const [state, setState] = useState("");
+  const [district, setDistrict] = useState("");
   
   // OTP State
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -26,6 +29,14 @@ export default function LoginPage() {
   // UI State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  
+  const stateDistrictData: { [key: string]: string[] } = {
+    "Maharashtra": ["Pune", "Mumbai", "Nagpur", "Nashik", "Aurangabad"],
+    "Gujarat": ["Ahmedabad", "Surat", "Rajkot", "Vadodara"],
+    "Karnataka": ["Bangalore", "Mysore", "Hubli", "Mangalore"],
+    "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur"],
+    "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota"]
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +68,10 @@ export default function LoginPage() {
           mobileNumber, 
           password, 
           fullName, 
-          role: 'farmer' 
+          role: 'farmer',
+          aadhaarNumber,
+          state,
+          district
         });
         if (res.data.success) {
           setUserId(res.data.userId);
@@ -244,7 +258,13 @@ export default function LoginPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Aadhaar Number</label>
-                    <input type="text" className="w-full h-[44px] px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-forest/20 focus:border-forest outline-none transition-all" placeholder="Optional for now" />
+                    <input 
+                      type="text" 
+                      value={aadhaarNumber}
+                      onChange={(e) => setAadhaarNumber(e.target.value)}
+                      className="w-full h-[44px] px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-forest/20 focus:border-forest outline-none transition-all" 
+                      placeholder="12-digit number" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
@@ -254,14 +274,25 @@ export default function LoginPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-                    <select className="w-full h-[44px] px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-forest/20 focus:border-forest outline-none bg-white">
-                      <option>Select State</option>
+                    <select 
+                      value={state}
+                      onChange={(e) => { setState(e.target.value); setDistrict(""); }}
+                      className="w-full h-[44px] px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-forest/20 focus:border-forest outline-none bg-white"
+                    >
+                      <option value="">Select State</option>
+                      {Object.keys(stateDistrictData).map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
-                    <select className="w-full h-[44px] px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-forest/20 focus:border-forest outline-none bg-white">
-                      <option>Select District</option>
+                    <select 
+                      value={district}
+                      onChange={(e) => setDistrict(e.target.value)}
+                      disabled={!state}
+                      className="w-full h-[44px] px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-forest/20 focus:border-forest outline-none bg-white disabled:bg-gray-50 disabled:text-gray-400"
+                    >
+                      <option value="">Select District</option>
+                      {state && stateDistrictData[state].map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </div>
                 </div>

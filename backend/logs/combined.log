@@ -373,3 +373,67 @@
 {"level":"info","message":"[CronJobs] ✓ All scheduled automation crons initialized successfully.","service":"agro-backend","timestamp":"2026-03-30T20:42:34.726Z"}
 {"level":"info","message":"Server running in development mode on port 5000","service":"agro-backend","timestamp":"2026-03-30T20:42:34.742Z"}
 {"level":"info","message":"[CronJob:SLAMonitor] ✓ No SLA breaches detected.","service":"agro-backend","timestamp":"2026-03-30T20:42:35.238Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:17:17.218Z"}
+{"level":"error","message":"Error connecting to MongoDB: querySrv ECONNREFUSED _mongodb._tcp.purvesh.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:17:17.231Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:20:18.212Z"}
+{"level":"error","message":"Error connecting to MongoDB: Server selection timed out after 30000 ms","service":"agro-backend","timestamp":"2026-04-02T08:20:48.088Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:24:07.304Z"}
+{"level":"error","message":"Error connecting to MongoDB: querySrv ECONNREFUSED _mongodb._tcp.purvesh.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:24:07.315Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:26:44.330Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:28:07.969Z"}
+{"level":"error","message":"Error connecting to MongoDB: querySrv ECONNREFUSED _mongodb._tcp.purvesh.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:28:07.981Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:31:34.145Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:31:34.454Z"}
+{"level":"info","message":"BullMQ Background Workers initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:31:34.460Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Running hourly SLA breach scan...","service":"agro-backend","timestamp":"2026-04-02T08:31:34.527Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Scheduled — runs every hour at :00 (IST)","service":"agro-backend","timestamp":"2026-04-02T08:31:34.529Z"}
+{"level":"info","message":"[CronJob:FraudScanner] Scheduled — runs every Sunday at midnight (IST)","service":"agro-backend","timestamp":"2026-04-02T08:31:34.533Z"}
+{"level":"info","message":"[CronJobs] ✓ All scheduled automation crons initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:31:34.534Z"}
+{"level":"info","message":"Server running in development mode on port 5001","service":"agro-backend","timestamp":"2026-04-02T08:31:34.549Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] ✓ No SLA breaches detected.","service":"agro-backend","timestamp":"2026-04-02T08:31:34.766Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:32:03.760Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:32:04.063Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:33:12.409Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:33:12.694Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:33:59.817Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:34:00.095Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:34:55.349Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:34:55.680Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:34:55.721Z"}
+{"level":"info","message":"BullMQ Background Workers initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:34:55.689Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Running hourly SLA breach scan...","service":"agro-backend","timestamp":"2026-04-02T08:34:55.749Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Scheduled — runs every hour at :00 (IST)","service":"agro-backend","timestamp":"2026-04-02T08:34:55.752Z"}
+{"level":"info","message":"[CronJob:FraudScanner] Scheduled — runs every Sunday at midnight (IST)","service":"agro-backend","timestamp":"2026-04-02T08:34:55.764Z"}
+{"level":"info","message":"[CronJobs] ✓ All scheduled automation crons initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:34:55.765Z"}
+{"level":"info","message":"Server running in development mode on port 5002","service":"agro-backend","timestamp":"2026-04-02T08:34:55.785Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:34:56.040Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] ✓ No SLA breaches detected.","service":"agro-backend","timestamp":"2026-04-02T08:34:56.204Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:39:02.378Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:39:02.645Z"}
+{"level":"info","message":"BullMQ Background Workers initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:39:02.651Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Running hourly SLA breach scan...","service":"agro-backend","timestamp":"2026-04-02T08:39:02.679Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Scheduled — runs every hour at :00 (IST)","service":"agro-backend","timestamp":"2026-04-02T08:39:02.681Z"}
+{"level":"info","message":"[CronJob:FraudScanner] Scheduled — runs every Sunday at midnight (IST)","service":"agro-backend","timestamp":"2026-04-02T08:39:02.686Z"}
+{"level":"info","message":"[CronJobs] ✓ All scheduled automation crons initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:39:02.687Z"}
+{"level":"info","message":"Server running in development mode on port 5000","service":"agro-backend","timestamp":"2026-04-02T08:39:02.699Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] ✓ No SLA breaches detected.","service":"agro-backend","timestamp":"2026-04-02T08:39:03.110Z"}
+{"ip":"::1","level":"error","message":"Cast to ObjectId failed for value \"categories\" (type string) at path \"_id\" for model \"Scheme\"","method":"GET","service":"agro-backend","stack":"CastError: Cast to ObjectId failed for value \"categories\" (type string) at path \"_id\" for model \"Scheme\"\n    at SchemaObjectId.cast (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\schema\\objectId.js:253:11)\n    at SchemaType.applySetters (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\schemaType.js:1287:12)\n    at SchemaType.castForQuery (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\schemaType.js:1713:17)\n    at cast (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\cast.js:386:32)\n    at Query.cast (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:5127:12)\n    at Query._castConditions (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:2376:10)\n    at model.Query._findOne (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:2716:8)\n    at model.Query.exec (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:4726:80)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.getSchemeById (D:\\Kartik\\AgroSeva\\backend\\src\\controllers\\scheme.controller.js:27:18)","timestamp":"2026-04-02T08:42:27.844Z","url":"/api/public/schemes/categories"}
+{"ip":"::1","level":"error","message":"Cast to ObjectId failed for value \"categories\" (type string) at path \"_id\" for model \"Scheme\"","method":"GET","service":"agro-backend","stack":"CastError: Cast to ObjectId failed for value \"categories\" (type string) at path \"_id\" for model \"Scheme\"\n    at SchemaObjectId.cast (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\schema\\objectId.js:253:11)\n    at SchemaType.applySetters (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\schemaType.js:1287:12)\n    at SchemaType.castForQuery (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\schemaType.js:1713:17)\n    at cast (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\cast.js:386:32)\n    at Query.cast (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:5127:12)\n    at Query._castConditions (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:2376:10)\n    at model.Query._findOne (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:2716:8)\n    at model.Query.exec (D:\\Kartik\\AgroSeva\\backend\\node_modules\\mongoose\\lib\\query.js:4726:80)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.getSchemeById (D:\\Kartik\\AgroSeva\\backend\\src\\controllers\\scheme.controller.js:27:18)","timestamp":"2026-04-02T08:42:28.867Z","url":"/api/public/schemes/categories"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:58:09.957Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:58:09.958Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T08:58:09.961Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:58:12.638Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:58:12.638Z"}
+{"level":"info","message":"MongoDB Connected: purvesh-shard-00-00.nltu4.mongodb.net","service":"agro-backend","timestamp":"2026-04-02T08:58:12.646Z"}
+{"level":"info","message":"BullMQ Background Workers initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:58:12.654Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Running hourly SLA breach scan...","service":"agro-backend","timestamp":"2026-04-02T08:58:12.687Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] Scheduled — runs every hour at :00 (IST)","service":"agro-backend","timestamp":"2026-04-02T08:58:12.689Z"}
+{"level":"info","message":"[CronJob:FraudScanner] Scheduled — runs every Sunday at midnight (IST)","service":"agro-backend","timestamp":"2026-04-02T08:58:12.695Z"}
+{"level":"info","message":"[CronJobs] ✓ All scheduled automation crons initialized successfully.","service":"agro-backend","timestamp":"2026-04-02T08:58:12.695Z"}
+{"level":"info","message":"Server running in development mode on port 5000","service":"agro-backend","timestamp":"2026-04-02T08:58:12.711Z"}
+{"level":"info","message":"[CronJob:SLAMonitor] ✓ No SLA breaches detected.","service":"agro-backend","timestamp":"2026-04-02T08:58:26.337Z"}
+{"level":"info","message":"==== APP SMS ==== To: 9123456789 | Message: Your AgroSeva OTP is 501355. Valid for 10 minutes.","service":"agro-backend","timestamp":"2026-04-02T09:02:47.236Z"}
+{"level":"error","message":"Failed to send SMS via Twilio: The number +91912345XXXX is unverified. Trial accounts cannot send messages to unverified numbers; verify +91912345XXXX at twilio.com/user/account/phone-numbers/verified, or purchase a Twilio number to send messages to unverified numbers - Please use the OTP printed above.","service":"agro-backend","timestamp":"2026-04-02T09:02:51.370Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T09:06:44.285Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T09:06:44.284Z"}
+{"level":"info","message":"Redis Client Connected","service":"agro-backend","timestamp":"2026-04-02T09:06:44.283Z"}

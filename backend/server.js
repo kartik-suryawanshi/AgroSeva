@@ -5,14 +5,14 @@ const connectDB = require('./src/config/db');
 const logger = require('./src/config/logger');
 // require('./src/config/redis'); // Initialize Redis
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 
 const startServer = async () => {
   try {
     // Connect to database completely resolving before listening
     const connectDB = require('./src/config/db');
     await connectDB();
-    
+
     // Initialize Background Workers (BullMQ)
     require('./src/jobs/index')();
 
@@ -23,7 +23,7 @@ const startServer = async () => {
     server.listen(PORT, () => {
       logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
     });
-    
+
     // Graceful shutdown
     process.on('SIGINT', async () => {
       logger.info('SIGINT signal received: closing HTTP server');

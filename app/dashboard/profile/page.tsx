@@ -12,7 +12,22 @@ export default function ProfilePage() {
   const [showAccount, setShowAccount] = useState(false);
 
   // Editable form state
-  const [profileParams, setProfileParams] = useState<any>({});
+  const [profileParams, setProfileParams] = useState<any>({
+    dob: "",
+    gender: "male",
+    mobile: "",
+    email: "",
+    surveyNo: "",
+    totalLand: "",
+    landType: "irrigated",
+    primaryCrop: "",
+    secondaryCrop: "",
+    irrigation: "none",
+    bankName: "",
+    branch: "",
+    ifsc: "",
+    holderName: ""
+  });
 
   const { data: farmer, isLoading } = useQuery({
     queryKey: ['farmerProfile'],
@@ -149,7 +164,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date of Birth</label>
                 {isEditing ? (
-                  <input type="date" name="dob" value={profileParams.dob} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="date" name="dob" value={profileParams.dob || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
                 ) : (
                   <div className="font-medium text-gray-900 p-2">{farmer?.personalDetails?.dateOfBirth ? new Date(farmer.personalDetails.dateOfBirth).toLocaleDateString() : 'N/A'}</div>
                 )}
@@ -157,7 +172,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Gender</label>
                 {isEditing ? (
-                  <select name="gender" value={profileParams.gender} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm bg-white capitalize">
+                  <select name="gender" value={profileParams.gender || "male"} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm bg-white capitalize">
                     <option value="male">Male</option><option value="female">Female</option><option value="other">Other</option>
                   </select>
                 ) : (
@@ -169,8 +184,8 @@ export default function ProfilePage() {
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Mobile / Email</label>
               {isEditing ? (
                 <div className="space-y-2">
-                  <input type="tel" name="mobile" value={profileParams.mobile} onChange={handleChange} placeholder="Mobile Number" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
-                  <input type="email" name="email" value={profileParams.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="tel" name="mobile" value={profileParams.mobile || ""} onChange={handleChange} placeholder="Mobile Number" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="email" name="email" value={profileParams.email || ""} onChange={handleChange} placeholder="Email" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
                 </div>
               ) : (
                 <div className="font-medium text-gray-900 p-2">{farmer?.personalDetails?.mobileNumber || 'N/A'}<br/><span className="text-gray-500 font-normal">{farmer?.personalDetails?.email || 'No email provided'}</span></div>
@@ -189,7 +204,7 @@ export default function ProfilePage() {
              <div>
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Survey / Khata No.</label>
               {isEditing ? (
-                <input type="text" name="surveyNo" value={profileParams.surveyNo} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                <input type="text" name="surveyNo" value={profileParams.surveyNo || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
               ) : (
                 <div className="font-medium text-gray-900 p-2">{farmer?.landDetails?.surveyNumber || 'N/A'}</div>
               )}
@@ -198,7 +213,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Total Land (Acres)</label>
                 {isEditing ? (
-                  <input type="number" step="0.1" name="totalLand" value={profileParams.totalLand} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="number" step="0.1" name="totalLand" value={profileParams.totalLand || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
                 ) : (
                   <div className="font-medium text-gray-900 p-2">{farmer?.landDetails?.totalLandAcres || 'N/A'}</div>
                 )}
@@ -206,7 +221,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Land Type</label>
                 {isEditing ? (
-                  <select name="landType" value={profileParams.landType} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm bg-white capitalize">
+                  <select name="landType" value={profileParams.landType || "irrigated"} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm bg-white capitalize">
                     <option value="irrigated">Irrigated</option><option value="unirrigated">Unirrigated</option><option value="forest">Forest</option>
                   </select>
                 ) : (
@@ -218,7 +233,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Primary Crop</label>
                 {isEditing ? (
-                  <input type="text" name="primaryCrop" value={profileParams.primaryCrop} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="text" name="primaryCrop" value={profileParams.primaryCrop || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
                 ) : (
                   <div className="font-medium text-gray-900 p-2">{farmer?.landDetails?.primaryCrop || 'N/A'}</div>
                 )}
@@ -226,7 +241,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Secondary Crop</label>
                 {isEditing ? (
-                  <input type="text" name="secondaryCrop" value={profileParams.secondaryCrop} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="text" name="secondaryCrop" value={profileParams.secondaryCrop || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
                 ) : (
                   <div className="font-medium text-gray-900 p-2">{farmer?.landDetails?.secondaryCrop || 'N/A'}</div>
                 )}
@@ -235,7 +250,7 @@ export default function ProfilePage() {
             <div>
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Irrigation Source</label>
               {isEditing ? (
-                  <select name="irrigation" value={profileParams.irrigation} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm bg-white capitalize">
+                  <select name="irrigation" value={profileParams.irrigation || "none"} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm bg-white capitalize">
                     <option value="borewell">Borewell</option><option value="canal">Canal</option><option value="rainwater">Rainwater</option><option value="none">None</option>
                   </select>
                 ) : (
@@ -256,8 +271,8 @@ export default function ProfilePage() {
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Bank Name & Branch</label>
               {isEditing ? (
                 <div className="space-y-2">
-                  <input type="text" name="bankName" value={profileParams.bankName} onChange={handleChange} placeholder="Bank Name" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
-                  <input type="text" name="branch" value={profileParams.branch} onChange={handleChange} placeholder="Branch" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="text" name="bankName" value={profileParams.bankName || ""} onChange={handleChange} placeholder="Bank Name" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                  <input type="text" name="branch" value={profileParams.branch || ""} onChange={handleChange} placeholder="Branch" className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
                 </div>
               ) : (
                 <div className="font-medium text-gray-900 p-2">{farmer?.bankDetails?.bankName || 'N/A'}<br/><span className="text-gray-500 font-normal">{farmer?.bankDetails?.branchName || ''}</span></div>
@@ -275,7 +290,7 @@ export default function ProfilePage() {
             <div>
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">IFSC Code</label>
               {isEditing ? (
-                <input type="text" name="ifsc" value={profileParams.ifsc} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm uppercase font-mono" />
+                <input type="text" name="ifsc" value={profileParams.ifsc || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm uppercase font-mono" />
               ) : (
                 <div className="font-medium text-gray-900 p-2 font-mono">{farmer?.bankDetails?.ifscCode || 'N/A'}</div>
               )}
@@ -283,7 +298,7 @@ export default function ProfilePage() {
             <div>
                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Account Holder Name</label>
                {isEditing ? (
-                <input type="text" name="holderName" value={profileParams.holderName} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
+                <input type="text" name="holderName" value={profileParams.holderName || ""} onChange={handleChange} className="w-full p-2 border border-blue-300 rounded focus:ring-1 focus:ring-forest outline-none text-sm" />
               ) : (
                 <div className="font-medium text-gray-900 p-2">{farmer?.bankDetails?.accountHolderName || 'N/A'}</div>
               )}

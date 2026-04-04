@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const config = require('../config');
 
 const requireAuth = async (req, res, next) => {
   try {
@@ -11,7 +12,7 @@ const requireAuth = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     
     try {
-      const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+      const decoded = jwt.verify(token, config.jwt.secret);
       
       // Fetch fresh user to check if active
       const user = await User.findById(decoded.userId).lean();
@@ -50,7 +51,7 @@ const optionalAuth = async (req, res, next) => {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
       try {
-        const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+        const decoded = jwt.verify(token, config.jwt.secret);
         req.user = await User.findById(decoded.userId).lean();
       } catch (err) {
         // Ignore errors for optional auth

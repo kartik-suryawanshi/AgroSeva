@@ -1,7 +1,8 @@
 const winston = require('winston');
+const config = require('./index');
 
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+  level: config.env === 'development' ? 'debug' : 'info',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),
@@ -14,7 +15,7 @@ const logger = winston.createLogger({
   ],
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (config.env !== 'production') {
   logger.add(
     new winston.transports.Console({
       format: winston.format.combine(

@@ -1,6 +1,7 @@
 const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 const { RedisStore } = require('rate-limit-redis');
 const redisClient = require('../config/redis');
+const config = require('../config');
 
 const makeRedisStore = (prefix) => {
   if (!redisClient.isReady) return undefined; // use in-memory fallback
@@ -22,8 +23,8 @@ const authLimiter = rateLimit({
 
 // 100 requests per minute per userId (fallback to IP)
 const apiLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: process.env.RATE_LIMIT_MAX_REQUESTS || 100,
+  windowMs: config.rateLimit.windowMs,
+  max: config.rateLimit.max,
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests, please slow down.' },

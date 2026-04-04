@@ -1,10 +1,11 @@
-const cloudinary = require('../config/cloudinary');
+const config = require('../config');
+
 const Document = require('../models/Document');
 const Farmer = require('../models/Farmer');
 const { Queue } = require('bullmq');
 
 // Connect to BullMQ queue for OCR processing
-const ocrQueue = new Queue('ocr-process', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+const ocrQueue = new Queue('ocr-process', { connection: { url: config.redis.url } });
 
 exports.uploadDocument = async (req, res) => {
   if (!req.file) {

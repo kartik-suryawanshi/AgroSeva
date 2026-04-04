@@ -1,7 +1,4 @@
-const { Worker } = require('bullmq');
-const axios = require('axios');
-const Grievance = require('../models/Grievance');
-const logger = require('../config/logger');
+const config = require('../config');
 
 const categoryDeptMap = {
   'subsidy_delay': 'Subsidy Department',
@@ -19,7 +16,7 @@ const nlpWorker = new Worker('nlp-analyze', async (job) => {
   if (!grievance) throw new Error('Grievance not found');
 
   try {
-    const aiUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+    const aiUrl = config.aiService.url;
     
     // Call Python microservice
     const textToAnalyze = `${grievance.subject}. ${grievance.description}`;

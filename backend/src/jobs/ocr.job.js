@@ -1,7 +1,4 @@
-const { Worker } = require('bullmq');
-const axios = require('axios');
-const Document = require('../models/Document');
-const logger = require('../config/logger');
+const config = require('../config');
 
 const ocrWorker = new Worker('ocr-process', async (job) => {
   const { documentId } = job.data;
@@ -9,7 +6,7 @@ const ocrWorker = new Worker('ocr-process', async (job) => {
   if (!doc) throw new Error('Document not found');
 
   try {
-    const aiUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+    const aiUrl = config.aiService.url;
     
     // Call Python microservice
     const response = await axios.post(`${aiUrl}/ocr`, { imageUrl: doc.cloudinaryUrl });

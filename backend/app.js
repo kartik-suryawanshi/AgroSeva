@@ -4,11 +4,20 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const config = require('./src/config');
+
 const app = express();
 
 // Security & Parsing
-app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "img-src": ["'self'", "data:", "res.cloudinary.com"],
+    },
+  },
+}));
+app.use(cors({ origin: config.frontend.url, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

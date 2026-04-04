@@ -1,14 +1,8 @@
-const crypto = require('crypto');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { z } = require('zod');
-const User = require('../models/User');
-const Farmer = require('../models/Farmer');
-const { sendSMS } = require('../utils/sms');
+const config = require('../config');
 
 const generateTokenPair = (userId) => {
-  const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m' });
-  const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRY || '7d' });
+  const accessToken = jwt.sign({ userId }, config.jwt.secret, { expiresIn: config.jwt.accessExpiry });
+  const refreshToken = jwt.sign({ userId }, config.jwt.refreshSecret, { expiresIn: config.jwt.refreshExpiry });
   return { accessToken, refreshToken };
 };
 
@@ -180,7 +174,7 @@ exports.refresh = async (req, res) => {
   if (!refreshToken) return res.status(401).json({ success: false, message: 'No token provided' });
 
   try {
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret);
     const user = await User.findById(decoded.userId);
 
     if (!user) return res.status(401).json({ success: false, message: 'Invalid token' });

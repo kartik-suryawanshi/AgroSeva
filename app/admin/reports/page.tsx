@@ -108,7 +108,7 @@ export default function ReportsAnalyticsPage() {
                ) : (
                  <div>
                    <h3 className="text-xl font-bold text-gray-400 mb-2">Service Offline</h3>
-                   <span className="text-xs text-gray-400">AI prediction engine unreachable on port 5002</span>
+                   <span className="text-xs text-gray-400">AI prediction engine is currently unreachable.</span>
                  </div>
                )}
             </div>
@@ -268,3 +268,4 @@ export default function ReportsAnalyticsPage() {
     </div>
   );
 }
+

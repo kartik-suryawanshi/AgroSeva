@@ -1,16 +1,15 @@
-// Basic Twilio stub. We can swap with actual Twilio when keys exist.
-const logger = require('../config/logger');
+const config = require('../config');
 
 const sendSMS = async (mobileNumber, message) => {
   // Always log the SMS (especially the OTP) to the console for hackathon testing
   logger.info(`==== APP SMS ==== To: ${mobileNumber} | Message: ${message}`);
 
   try {
-    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
-      const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    if (config.twilio.accountSid && config.twilio.authToken) {
+      const client = require('twilio')(config.twilio.accountSid, config.twilio.authToken);
       await client.messages.create({
         body: message,
-        from: process.env.TWILIO_PHONE_NUMBER,
+        from: config.twilio.phoneNumber,
         to: mobileNumber.startsWith('+') ? mobileNumber : `+91${mobileNumber}`,
       });
       logger.info(`SMS successfully sent to ${mobileNumber} via Twilio`);

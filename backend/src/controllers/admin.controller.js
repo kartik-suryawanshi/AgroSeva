@@ -1,13 +1,8 @@
-const Application = require('../models/Application');
-const Grievance = require('../models/Grievance');
-const AuditLog = require('../models/AuditLog');
-const redisClient = require('../config/redis');
-const { Queue } = require('bullmq');
-const axios = require('axios');
+const config = require('../config');
 
 let reportQueue = null;
 try {
-  reportQueue = new Queue('generate-report', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+  reportQueue = new Queue('generate-report', { connection: { url: config.redis.url } });
 } catch (e) {
   // BullMQ unavailable without Redis
 }
@@ -204,7 +199,7 @@ exports.getPredictions = async (req, res) => {
   const historicalData = history.map(h => ({ date: h._id, count: h.count }));
 
   try {
-    const aiUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+    const aiUrl = config.aiService.url;
     const response = await axios.post(`${aiUrl}/predict`, { forecastDays, historicalData });
     res.status(200).json({ success: true, data: response.data });
   } catch (error) {

@@ -3,6 +3,7 @@ import io
 import re
 import requests
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from PIL import Image
 import pytesseract
 from transformers import pipeline
@@ -13,6 +14,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+
+# Security: Only allow requests from the Node.js backend
+allowed_origin = os.getenv('ALLOWED_ORIGIN', '*')
+CORS(app, resources={r"/*": {"origins": allowed_origin}})
 
 # Initialize ML Models (Lazy loading or global based on memory constraints)
 # For a production app, these would be robustly deployed, but here they run in the same container.

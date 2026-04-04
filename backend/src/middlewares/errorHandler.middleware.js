@@ -1,4 +1,5 @@
 const logger = require('../config/logger');
+const config = require('../config');
 
 const errorHandler = (err, req, res, next) => {
   logger.error(err.message, { stack: err.stack, url: req.originalUrl, method: req.method, ip: req.ip });
@@ -44,7 +45,7 @@ const errorHandler = (err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    ...(config.env === 'development' && { stack: err.stack }),
   });
 };
 

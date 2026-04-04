@@ -81,17 +81,11 @@ export default function AdminLayout({
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
-<<<<<<< HEAD
   // Login page renders without sidebar/shell
   if (isLoginPage) return <>{children}</>;
 
   // Show blank while checking auth (prevents flash before redirect)
   if (!authChecked) return null;
-=======
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
->>>>>>> 03497d2bb253a90216569ede0e1886d871307222
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex">

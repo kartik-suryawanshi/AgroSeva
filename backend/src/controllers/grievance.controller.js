@@ -2,7 +2,14 @@ const Grievance = require('../models/Grievance');
 const Farmer = require('../models/Farmer');
 const { Queue } = require('bullmq');
 
-const nlpQueue = new Queue('nlp-analyze', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+const config = require('../config');
+
+const nlpQueue = new Queue('nlp-analyze', { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+  } 
+});
 
 exports.submitGrievance = async (req, res) => {
   const { category, subject, description, relatedApplicationId, attachments } = req.body;

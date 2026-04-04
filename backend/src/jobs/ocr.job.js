@@ -1,3 +1,7 @@
+const { Worker } = require('bullmq');
+const axios = require('axios');
+const Document = require('../models/Document');
+const logger = require('../config/logger');
 const config = require('../config');
 
 const ocrWorker = new Worker('ocr-process', async (job) => {
@@ -32,7 +36,12 @@ const ocrWorker = new Worker('ocr-process', async (job) => {
     logger.error(`OCR processing failed for document ${documentId}`, error);
     throw error;
   }
-}, { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+}, { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+  } 
+});
 
 ocrWorker.on('failed', (job, err) => {
   logger.error(`Job ${job.id} failed: ${err.message}`);

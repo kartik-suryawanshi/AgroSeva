@@ -14,7 +14,7 @@ const config = {
     dbName: process.env.DB_NAME || 'agro_seva',
   },
   redis: {
-    url: process.env.BULL_REDIS_URL || 'redis://localhost:6379',
+    url: process.env.BULL_REDIS_URL || process.env.REDIS_URL || 'redis://localhost:6379',
   },
   
   // Auth

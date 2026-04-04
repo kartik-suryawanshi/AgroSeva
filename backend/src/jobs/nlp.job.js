@@ -1,3 +1,7 @@
+const { Worker } = require('bullmq');
+const axios = require('axios');
+const Grievance = require('../models/Grievance');
+const logger = require('../config/logger');
 const config = require('../config');
 
 const categoryDeptMap = {
@@ -52,7 +56,12 @@ const nlpWorker = new Worker('nlp-analyze', async (job) => {
     logger.error(`NLP analysis failed for grievance ${grievanceId}`, error);
     throw error;
   }
-}, { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+}, { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+  } 
+});
 
 nlpWorker.on('failed', (job, err) => {
   logger.error(`NLP Job ${job.id} failed: ${err.message}`);

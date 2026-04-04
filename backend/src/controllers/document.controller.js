@@ -5,7 +5,12 @@ const Farmer = require('../models/Farmer');
 const { Queue } = require('bullmq');
 
 // Connect to BullMQ queue for OCR processing
-const ocrQueue = new Queue('ocr-process', { connection: { url: config.redis.url } });
+const ocrQueue = new Queue('ocr-process', { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+  } 
+});
 
 exports.uploadDocument = async (req, res) => {
   if (!req.file) {

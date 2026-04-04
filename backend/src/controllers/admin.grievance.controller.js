@@ -4,7 +4,12 @@ const { Queue } = require('bullmq');
 
 let notifQueue = null;
 try {
-  notifQueue = new Queue('send-notification', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+  notifQueue = new Queue('send-notification', { 
+    connection: { 
+      url: config.redis.url,
+      tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+    } 
+  });
 } catch (e) { /* BullMQ unavailable */ }
 
 // Helper to invalidate admin dashboard cache

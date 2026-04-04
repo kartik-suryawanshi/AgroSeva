@@ -15,7 +15,14 @@ const invalidateDashboardCache = async () => {
   } catch (_) { /* Redis unavailable */ }
 };
 
-const notifQueue = new Queue('send-notification', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+const config = require('../config');
+
+const notifQueue = new Queue('send-notification', { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+  } 
+});
 
 exports.submitApplication = async (req, res) => {
   const { schemeId, documents, formData } = req.body;

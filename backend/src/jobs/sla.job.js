@@ -1,6 +1,7 @@
 const { Worker } = require('bullmq');
 const Grievance = require('../models/Grievance');
 const logger = require('../config/logger');
+const config = require('../config');
 
 const slaWorker = new Worker('sla-monitor', async () => {
   logger.info(`Starting SLA background sync`);
@@ -29,7 +30,12 @@ const slaWorker = new Worker('sla-monitor', async () => {
   } catch (error) {
     logger.error('SLA Sync failed', error);
   }
-}, { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+}, { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+  } 
+});
 
 slaWorker.on('failed', (job, err) => {
   logger.error(`SLA Job ${job.id} failed: ${err.message}`);

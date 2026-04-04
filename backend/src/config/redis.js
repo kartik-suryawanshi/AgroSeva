@@ -8,6 +8,7 @@ const redisClient = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
   enableReadyCheck: false,
   lazyConnect: true,          // Don't connect on instantiation — prevents crash at startup
+  tls: redisUrl.startsWith('rediss://') ? {} : undefined,
   retryStrategy: (times) => {
     if (times > 3) {
       logger.warn('Redis unavailable after 3 retries — running without Redis cache.');

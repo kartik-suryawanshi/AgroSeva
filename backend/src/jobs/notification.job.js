@@ -3,6 +3,7 @@ const Notification = require('../models/Notification');
 const User = require('../models/User');
 const { sendSMS } = require('../utils/sms');
 const logger = require('../config/logger');
+const config = require('../config');
 
 const notifWorker = new Worker('send-notification', async (job) => {
   const { recipientId, type, title, message, data, channels } = job.data;
@@ -35,7 +36,12 @@ const notifWorker = new Worker('send-notification', async (job) => {
     logger.error(`Notification delivery failed for ${recipientId}`, error);
     throw error;
   }
-}, { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+}, { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+  } 
+});
 
 notifWorker.on('failed', (job, err) => {
   logger.error(`Notification Job ${job.id} failed: ${err.message}`);

@@ -1,7 +1,14 @@
 const Scheme = require('../models/Scheme');
 const { Queue } = require('bullmq');
 
-const batchReevalQueue = new Queue('batch-eligibility-reeval', { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+const config = require('../config');
+
+const batchReevalQueue = new Queue('batch-eligibility-reeval', { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+  } 
+});
 
 exports.getSchemes = async (req, res) => {
   const { search, status, page = 1, limit = 20 } = req.query;

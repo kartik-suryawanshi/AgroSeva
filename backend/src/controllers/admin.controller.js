@@ -2,7 +2,12 @@ const config = require('../config');
 
 let reportQueue = null;
 try {
-  reportQueue = new Queue('generate-report', { connection: { url: config.redis.url } });
+  reportQueue = new Queue('generate-report', { 
+    connection: { 
+      url: config.redis.url,
+      tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+    } 
+  });
 } catch (e) {
   // BullMQ unavailable without Redis
 }

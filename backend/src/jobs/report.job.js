@@ -1,6 +1,7 @@
 const { Worker } = require('bullmq');
 const Application = require('../models/Application');
 const logger = require('../config/logger');
+const config = require('../config');
 
 const reportWorker = new Worker('generate-report', async (job) => {
   const { reportType, dateFrom, dateTo, format, requestedBy } = job.data;
@@ -47,7 +48,12 @@ const reportWorker = new Worker('generate-report', async (job) => {
     logger.error(`Report generation failed for job ${job.id}`, error);
     throw error;
   }
-}, { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+}, { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+  } 
+});
 
 reportWorker.on('failed', (job, err) => {
   logger.error(`Report Job ${job.id} failed: ${err.message}`);

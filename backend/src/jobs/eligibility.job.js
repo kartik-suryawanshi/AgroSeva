@@ -4,6 +4,7 @@ const Scheme = require('../models/Scheme');
 const Farmer = require('../models/Farmer');
 const { evaluateEligibility } = require('../services/eligibilityEngine');
 const logger = require('../config/logger');
+const config = require('../config');
 
 const batchReevalWorker = new Worker('batch-eligibility-reeval', async (job) => {
   const { schemeId } = job.data;
@@ -43,7 +44,12 @@ const batchReevalWorker = new Worker('batch-eligibility-reeval', async (job) => 
   }
 
   logger.info(`Completed batch re-evaluation for scheme ${schemeId}`);
-}, { connection: { url: process.env.BULL_REDIS_URL || 'redis://localhost:6379' } });
+}, { 
+  connection: { 
+    url: config.redis.url,
+    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+  } 
+});
 
 batchReevalWorker.on('failed', (job, err) => {
   logger.error(`Batch Re-eval Job ${job.id} failed: ${err.message}`);

@@ -1,0 +1,11 @@
+# Ignore backend and AI service folders for Vercel frontend deployment
+backend/
+ai-service/
+logs/
+tmp/
+.env
+.env.local
+backend/.env
+ai-service/.env
+testing.md
+deploy.md

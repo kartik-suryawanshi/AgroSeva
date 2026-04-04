@@ -51,7 +51,7 @@ const reportWorker = new Worker('generate-report', async (job) => {
 }, { 
   connection: { 
     url: config.redis.url,
-    tls: config.redis.url.startsWith('rediss://') ? {} : undefined 
+    tls: config.redis.url.startsWith('rediss://') || config.redis.url.includes('upstash.io') ? {} : undefined 
   } 
 });
 

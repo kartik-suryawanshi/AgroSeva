@@ -20,7 +20,7 @@ const config = require('../config');
 const notifQueue = new Queue('send-notification', { 
   connection: { 
     url: config.redis.url,
-    tls: config.redis.url.startsWith('rediss://') ? {} : undefined
+    tls: config.redis.url.startsWith('rediss://') || config.redis.url.includes('upstash.io') ? {} : undefined
   } 
 });
 

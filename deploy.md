@@ -45,7 +45,7 @@ Before starting, ensure you have accounts and projects created for:
 1. In Render, create a **New Web Service**.
 2. Connect your repository.
 3. **Root Directory**: `backend`
-4. **Build Command**: `npm install`
+4. **Build Command**: `npm install` (Do NOT include npm start here)
 5. **Start Command**: `npm start`
 6. **Environment Variables**:
    - `NODE_ENV`: `production`

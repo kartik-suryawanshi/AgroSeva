@@ -6,8 +6,8 @@ const logger = require('./src/config/logger');
 // require('./src/config/redis'); // Initialize Redis
 
 // Prioritize PORT from environment (e.g., Render) over .env defaults if possible
-const PORT = process.env.PORT || 5002;
-const ENV = process.env.NODE_ENV || 'development';
+const PORT = process.env.PORT || 5000;
+const ENV = process.env.NODE_ENV || 'production';
 
 const startServer = async () => {
   try {

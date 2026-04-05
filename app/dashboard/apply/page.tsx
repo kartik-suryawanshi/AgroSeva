@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { CheckCircle2, UploadCloud, FileImage, ShieldAlert, CheckSquare, Loader2 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import api from "../../../lib/api";
 
 const STEPS = ["Personal Info", "Land Details", "Document Upload", "Review & Submit"];
 
-export default function ApplySchemePage() {
+function ApplySchemePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const schemeId = searchParams?.get("schemeId");
@@ -516,5 +516,13 @@ export default function ApplySchemePage() {
       </div>
 
     </div>
+  );
+}
+
+export default function ApplySchemePage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-12"><Loader2 className="animate-spin text-forest" size={32} /></div>}>
+      <ApplySchemePageContent />
+    </Suspense>
   );
 }

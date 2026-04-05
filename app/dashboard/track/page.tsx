@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Search, CheckCircle2, FileDown, Clock, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../lib/api";
 import { useSearchParams } from "next/navigation";
 
-export default function TrackApplicationPage() {
+function TrackApplicationPageContent() {
   const searchParams = useSearchParams();
   const initAppId = searchParams?.get("id") || "";
   
@@ -249,5 +249,13 @@ export default function TrackApplicationPage() {
       )}
 
     </div>
+  );
+}
+
+export default function TrackApplicationPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-12"><Loader2 className="animate-spin text-forest" size={32} /></div>}>
+      <TrackApplicationPageContent />
+    </Suspense>
   );
 }

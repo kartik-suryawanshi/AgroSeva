@@ -5,6 +5,14 @@ import { ZoomIn, RotateCw, CheckCircle2, AlertTriangle, FileWarning, Search, Ima
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
 
+interface ApplicationGroup {
+  id: string;
+  appDisplayId: string;
+  farmerName: string;
+  date: string;
+  docs: any[];
+}
+
 export default function DocumentVerificationPage() {
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   const [activeDocId, setActiveDocId] = useState<string | null>(null);
@@ -22,8 +30,8 @@ export default function DocumentVerificationPage() {
   });
 
   // Group flat documents array by application for the Sidebar logic
-  const applicationGroups = useMemo(() => {
-    const apps: any = {};
+  const applicationGroups = useMemo<ApplicationGroup[]>(() => {
+    const apps: Record<string, ApplicationGroup> = {};
     pendingDocs.forEach((doc: any) => {
       const appId = doc.applicationId?._id;
       if (!appId) return;
@@ -44,7 +52,7 @@ export default function DocumentVerificationPage() {
     
     // Filter by search
     if (searchTerm) {
-      return list.filter((a: any) => 
+      return list.filter((a: ApplicationGroup) => 
         a.farmerName.toLowerCase().includes(searchTerm.toLowerCase()) || 
         a.appDisplayId.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -55,7 +63,7 @@ export default function DocumentVerificationPage() {
   // Set selected automatically if possible
   useEffect(() => {
     if (applicationGroups.length > 0 && !selectedAppId) {
-      setSelectedAppId(applicationGroups[0].id as string);
+      setSelectedAppId(applicationGroups[0].id);
     }
   }, [applicationGroups, selectedAppId]);
 

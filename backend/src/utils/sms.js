@@ -1,3 +1,4 @@
+const logger = require('../config/logger');
 const config = require('../config');
 
 const sendSMS = async (mobileNumber, message) => {

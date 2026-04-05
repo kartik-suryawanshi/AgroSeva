@@ -1,3 +1,9 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const { z } = require('zod');
+const User = require('../models/User');
+const Farmer = require('../models/Farmer');
+const { sendSMS } = require('../utils/sms');
 const config = require('../config');
 
 const generateTokenPair = (userId) => {
